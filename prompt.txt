@@ -80,3 +80,5 @@ Wisconsin
 Wyoming
 
 The year should be 2023. Now give me 30 search queries mixed with the above requirements.
+Example output should forever be "- types of grant"+"location"+"2023".
+Perfect output is like this pattern "- Environmental Advocacy and Research Grants USA 2023"
