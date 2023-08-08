@@ -1,3 +1,5 @@
+Suppose you are a normal person searching the web. You are looking for grants websites in 2023.
+You have to find these types of grants:
 Environmental Advocacy and Research Grants
 Nonprofit Organization Grants
 Culture and Museum Grants
@@ -24,8 +26,8 @@ Female Founder Grants
 Artist Organization Grants
 Community Grants
 Small Business Grants
----------------------------------------------------------------------
 
+The grants should be from these locations:
 USA
 Alabama
 Arizona
@@ -76,3 +78,5 @@ Washington
 West Virginia
 Wisconsin
 Wyoming
+
+The year should be 2023. Now give me 30 search queries mixed with the above requirements.
