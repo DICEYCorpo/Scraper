@@ -1,12 +1,14 @@
-import os
+
+from dotenv import load_dotenv
 import requests
 from bs4 import BeautifulSoup
-from dotenv import load_dotenv
+import os
 import openai
+from urllib.parse import urljoin
 load_dotenv()
 
 
-with open("prompts","r") as f:
+with open("prompts.txt", "r") as f:
     prompts = f.read()
 
 
@@ -31,36 +33,42 @@ cleaned_lines = [line.replace('- ', '') for line in lines]
 with open('cleaned_grants.txt', 'w') as cfile:
     cfile.writelines(cleaned_lines)
 
-
-
+grants_data = []
 with open("cleaned_grants.txt", "r") as file:
     temp = file.readlines()
     for lines in temp:
         print(lines)
+        sentence = lines.split()
+        location = sentence[-2]
         search_url = "https://api.bing.microsoft.com/v7.0/search"
         search_term = lines
 
         headers = {"Ocp-Apim-Subscription-Key": os.getenv("SUBKEY")}
-        params = {"q": search_term, "textDecorations": True, "textFormat": "HTML", "count": 10}
+        params = {"q": search_term, "textDecorations": True, "textFormat": "HTML", "count": 1}
         response = requests.get(search_url, headers=headers, params=params)
         response.raise_for_status()
         search_results = response.json()
         pages = (search_results['webPages'])
         results = pages['value']
+        url = ""
         for result in results:
-            print(result['url'])
-            print()
+            url = result['url']
+
+            try:
+                # Send a GET request to the URL
+                response = requests.get(url)
+
+                # Parse the HTML content using BeautifulSoup
+                soup = BeautifulSoup(response.content, 'html.parser')
+
+                # Find all anchor tags <a> and extract the 'href' attribute
+                links = soup.find_all('a')
+                for link in links:
+                    href = link.get('href')
+                    if href and not href.startswith('#'):
+                        grants_data.append([location, urljoin(url, href)])
+            except requests.exceptions.ConnectTimeout:
+                pass
 
 
-
-
-# website = 'https://subslikescript.com/movie/Titanic-120338'
-# result = requests.get(website)
-# soup = BeautifulSoup(result.text, 'lxml')
-#
-# box = soup.find('article', class_='main-article')
-#
-# title = box.find('h1').get_text()
-# transcript = box.find('div', class_='full-script').get_text(strip=True, separator=' ')
-# print(title)
-# print(transcript)
+print(grants_data)
